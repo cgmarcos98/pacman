@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="es.cgmarcos.pacman.persistence.dao.PacienteDAO">
+
+    <resultMap id="PacienteMap" type="Paciente">
+        <id property="codPaciente" column="COD_PACIENTE"/>
+        <result property="nombre" column="NOMBRE"/>
+        <result property="apellido1" column="APELLIDO_1"/>
+        <result property="apellido2" column="APELLIDO_2"/>
+    </resultMap>
+
+    <select id="selectPacienteByCod" resultMap="PacienteMap">
+        SELECT
+        COD_PACIENTE,
+        NOMBRE,
+        APELLIDO_1,
+        APELLIDO_2
+        FROM PACIENTES
+        WHERE COD_PACIENTE = #{codPaciente}
+    </select>
+
+    <select id="selectAllPacientes" resultMap="PacienteMap">
+        SELECT
+        COD_PACIENTE,
+        NOMBRE,
+        APELLIDO_1,
+        APELLIDO_2
+        FROM PACIENTES
+    </select>
+
+    <insert id="insertPaciente" useGeneratedKeys="true" keyProperty="codPaciente" keyColumn="COD_PACIENTE">
+        <selectKey keyProperty="codPaciente" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+                    
+        </selectKey>
+        INSERT INTO PACIENTES(COD_PACIENTE, NOMBRE, APELLIDO_1, APELLIDO_2) VALUES (#{codPaciente}, #{nombre},
+        #{apellido1},#{apellido2})
+    </insert>
+
+    <update id="updatePaciente">
+        UPDATE PACIENTES
+        SET NOMBRE = #{nombre}, APELLIDO_1 = #{apellido1}, APELLIDO_2 = #{apellido2}
+        WHERE COD_PACIENTE = #{codPaciente}
+    </update>
+
+    <delete id="deletePaciente">
+        DELETE FROM PACIENTES
+        WHERE COD_PACIENTE = #{codPaciente}
+    </delete>
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                            ">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="es.cgmarcos.pacman.persistence"/>
+
+    <!-- Configuracion de la base de datos -->
+    <tx:annotation-driven/>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/pacman_db"/>
+        <property name="username" value="pacman"/>
+        <property name="password" value="pacman123"/>
+    </bean>
+
+    <bean id="springManagedTransactionFactory" class="org.mybatis.spring.transaction.SpringManagedTransactionFactory">
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="mapperLocations" value="classpath:es/cgmarcos/pacman/persistence/dao/*.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="typeAliasesPackage" value="es.cgmarcos.pacman.beans"/>
+        <property name="transactionFactory" ref="springManagedTransactionFactory"/>
+    </bean>
+
+
+    <!-- Definicion de Mappers -->
+
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="es.cgmarcos.pacman.persistence.dao"/>
+        <!--
+                <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        -->
+    </bean>
+
+</beans>

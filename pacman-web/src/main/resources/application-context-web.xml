@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+
+    <context:annotation-config/>
+    <context:component-scan base-package="es.cgmarcos.pacman.web"/>
+
+
+    <bean id="messageSourceWeb"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="locale/web-messages"/>
+    </bean>
+
+    <!-- Usuario Fake para no logarnos -->
+    <bean id="loginBean" class="es.cgmarcos.pacman.web.models.LoginBean">
+        <property name="login" value="cgmarcos"/>
+        <property name="password" value="carlos"/>
+    </bean>
+
+</beans>

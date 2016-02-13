@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="es.cgmarcos.pacman.persistence.dao.AnalisisAPDAO">
+
+    <resultMap id="AnalisisAPMap" type="AnalisisAP">
+        <id property="codAnalisis" column="COD_ANALISIS"/>
+        <result property="fechaRegistro" column="FECHA_REGISTRO"/>
+        <association property="paciente" javaType="Paciente">
+            <result property="codPaciente" column="p_cod_paciente"/>
+            <result property="nombre" column="p_nombre"/>
+            <result property="apellido1" column="p_apellido1"/>
+            <result property="apellido2" column="p_apellido2"/>
+        </association>
+        <association property="medicoAP" javaType="Medico">
+            <result property="codMedico" column="ma_cod_medico"/>
+            <result property="nombre" column="ma_nombre"/>
+            <result property="apellido1" column="ma_apellido_1"/>
+            <result property="apellido2" column="ma_apellido_2"/>
+            <result property="nif" column="map_nif"/>
+        </association>
+        <association property="clinicaAP" javaType="Clinica">
+            <result property="codClinica" column="ca_cod_clinica"/>
+            <result property="nombre" column="ca_nombre"/>
+            <result property="descripcion" column="ca_descripcion"/>
+        </association>
+        <association property="medicoRemitente" javaType="Medico">
+            <result property="codMedico" column="mr_cod_medico"/>
+            <result property="nombre" column="mr_nombre"/>
+            <result property="apellido1" column="mr_apellido_1"/>
+            <result property="apellido2" column="mr_apellido_2"/>
+            <result property="nif" column="mr_nif"/>
+        </association>
+        <association property="clinicaRemitente" javaType="Clinica">
+            <result property="codClinica" column="cr_cod_clinica"/>
+            <result property="nombre" column="cr_nombre"/>
+            <result property="descripcion" column="cr_descripcion"/>
+        </association>
+    </resultMap>
+
+    <sql id="SELECT_BASICO">
+        SELECT
+        a.COD_ANALISIS,
+        a.FECHA_REGISTRO,
+        p.COD_PACIENTE AS P_COD_PACIENTE,
+        p.NOMBRE AS P_NOMBRE,
+        p.APELLIDO_1 AS P_APELLIDO_1,
+        p.APELLIDO_2 AS P_APELLIDO_2,
+        ca.COD_CLINICA AS CA_COD_CLINICA,
+        ca.NOMBRE AS CA_NOMBRE,
+        ca.DESCRIPCION AS CA_DESCRIPCION,
+        ma.COD_MEDICO AS MA_COD_MEDICO,
+        ma.NOMBRE AS MA_NOMBRE,
+        ma.APELLIDO_1 AS MA_APELLIDO_1,
+        ma.APELLIDO_2 AS MA_APELLIDO_2,
+        ma.NIF AS MA_NIF,
+        cr.COD_CLINICA AS CR_COD_CLINICA,
+        cr.NOMBRE AS CR_NOMBRE,
+        cr.DESCRIPCION AS CR_DESCRIPCION,
+        mr.COD_MEDICO AS MR_COD_MEDICO,
+        mr.NOMBRE AS MR_NOMBRE,
+        mr.APELLIDO_1 AS MR_APELLIDO_1,
+        mr.APELLIDO_2 AS MR_APELLIDO_2,
+        mr.NIF AS MR_NIF
+        FROM ANALISIS_AP a, PACIENTES p,
+        CLINICAS_AP ca, MEDICOS_AP ma,
+        CLINICAS_REMITENTES cr, MEDICOS_REMITENTES mr
+        WHERE
+        a.cod_paciente = p.cod_paciente
+        AND a.MEDICO_AP = ma.COD_MEDICO
+        AND a.CLINICA_AP = ca.COD_CLINICA
+        AND a.MEDICO_REMITENTE = mr.COD_MEDICO
+        AND a.CLINICA_REMITENTE = cr.COD_CLINICA
+    </sql>
+
+    <select id="selectAllAnalisisAP" resultMap="AnalisisAPMap">
+        <include refid="SELECT_BASICO"/>
+    </select>
+
+    <select id="selectAnalisisAPByCod" resultMap="AnalisisAPMap">
+        <include refid="SELECT_BASICO"/>
+        AND COD_ANALISIS = #{codAnalisis}
+    </select>
+    <insert id="insertAnalisisAP" useGeneratedKeys="true" keyColumn="COD_ANALISIS" keyProperty="codAnalisis">
+        <selectKey keyProperty="codAnalisis" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()        
+        </selectKey>
+        INSERT INTO ANALISIS_AP (COD_ANALISIS, FECHA_REGISTRO, COD_PACIENTE, MEDICO_AP, CLINICA_AP, MEDICO_REMITENTE,
+        CLINICA_REMITENTE)
+        VALUES (#{codAnalisis}, #{fechaRegistro}, #{paciente.codPaciente}, #{medicoAP.codMedico},
+        #{clinicaAP.codClinica}, #{medicoRemitente.codMedico}, #{clinicaRemitente.codClinica})
+    </insert>
+
+    <delete id="deleteAnalisisAP">
+        DELETE FROM ANALISIS_AP
+        WHERE COD_ANALISIS = #{codAnalisis}
+    </delete>
+
+    <update id="updateAnalisisAP">
+        UPDATE ANALISIS_AP
+        SET FECHA_REGISTRO = #{fechaRegistro}, COD_PACIENTE = #{paciente.codPaciente},
+        MEDICO_AP = #{medicoAP.codMedico}, CLINICA_AP = #{clinicaAP.codClinica},
+        MEDICO_REMITENTE = #{medicoRemitente.codMedico}, CLINICA_REMITENTE = #{clinicaRemitente.codClinica}
+        WHERE COD_ANALISIS = #{codAnalisis}
+    </update>
+
+</mapper>

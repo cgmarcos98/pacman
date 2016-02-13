@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="es.cgmarcos.pacman.persistence.dao.ClinicaRemitenteDAO">
+
+    <resultMap id="ClinicaMap" type="Clinica" extends="es.cgmarcos.pacman.persistence.dao.ClinicaAPDAO.ClinicaMap"/>
+
+    <select id="selectClinicaRemitenteByCod" resultMap="ClinicaMap">
+        SELECT
+        COD_CLINICA,
+        NOMBRE,
+        DESCRIPCION
+        FROM CLINICAS_REMITENTES
+        WHERE COD_CLINICA = #{codClinica}
+    </select>
+
+    <select id="selectAllClinicasRemitentes" resultMap="ClinicaMap">
+        SELECT
+        COD_CLINICA,
+        NOMBRE,
+        DESCRIPCION
+        FROM CLINICAS_REMITENTES
+    </select>
+
+    <insert id="insertClinicaRemitente" useGeneratedKeys="true" keyColumn="COD_CLINICA" keyProperty="codClinica">
+        <selectKey keyProperty="codClinica" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+                    
+        </selectKey>
+        INSERT INTO CLINICAS_REMITENTES(COD_CLINICA, NOMBRE, DESCRIPCION) VALUES (#{codClinica}, #{nombre},
+        #{descripcion})
+    </insert>
+
+    <update id="updateClinicaRemitente">
+        UPDATE CLINICAS_REMITENTES
+        SET NOMBRE = #{nombre}, DESCRIPCION = #{descripcion}
+        WHERE COD_CLINICA = #{codClinica}
+    </update>
+
+    <delete id="deleteClinicaRemitente">
+        DELETE FROM CLINICAS_REMITENTES
+        WHERE COD_CLINICA = #{codClinica}
+    </delete>
+</mapper>

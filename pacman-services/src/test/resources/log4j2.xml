@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="debug" strict="true" name="pacman-services">
+    <Appenders>
+        <Appender type="Console" name="STDOUT">
+            <Layout type="PatternLayout" pattern="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+
+        <!-- Ejemplo de personalización por paquete -->
+        <!--<Logger name="com.autentia" level="trace"/>
+        <Logger name="org.springframxework" level="debug"/>-->
+    </Loggers>
+</Configuration>

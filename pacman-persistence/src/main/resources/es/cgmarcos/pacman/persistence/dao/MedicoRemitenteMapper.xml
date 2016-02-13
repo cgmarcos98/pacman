@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="es.cgmarcos.pacman.persistence.dao.MedicoRemitenteDAO">
+
+    <resultMap id="MedicoMap" type="Medico" extends="es.cgmarcos.pacman.persistence.dao.MedicoAPDAO.MedicoMap"/>
+
+    <select id="selectMedicoRemitenteByCod" resultMap="MedicoMap">
+        SELECT
+        COD_MEDICO,
+        NOMBRE,
+        APELLIDO_1,
+        APELLIDO_2,
+        NIF
+        FROM MEDICOS_REMITENTES
+        WHERE COD_MEDICO = #{codMedico}
+    </select>
+
+    <select id="selectAllMedicosRemitentes" resultMap="MedicoMap">
+        SELECT
+        COD_MEDICO,
+        NOMBRE,
+        APELLIDO_1,
+        APELLIDO_2,
+        NIF
+        FROM MEDICOS_REMITENTES
+    </select>
+
+    <insert id="insertMedicoRemitente" useGeneratedKeys="true" keyColumn="COD_MEDICO" keyProperty="codMedico">
+        <selectKey keyProperty="codMedico" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID();
+                    
+        </selectKey>
+        INSERT INTO MEDICOS_REMITENTES(COD_MEDICO, NOMBRE, APELLIDO_1, APELLIDO_2, NIF) VALUES (#{codMedico}, #{nombre},
+        #{apellido1},#{apellido2}, #{nif})
+    </insert>
+
+    <update id="updateMedicoRemitente">
+        UPDATE MEDICOS_REMITENTES
+        SET NOMBRE = #{nombre}, APELLIDO_1 = #{apellido1}, APELLIDO_2 = #{apellido2}, NIF =
+        #{nif}
+        WHERE COD_MEDICO = #{codMedico}
+    </update>
+
+    <delete id="deleteMedicoRemitente">
+        DELETE FROM MEDICOS_REMITENTES
+        WHERE COD_MEDICO = #{codMedico}
+    </delete>
+</mapper>
